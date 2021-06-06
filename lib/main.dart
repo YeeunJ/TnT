@@ -239,7 +239,9 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
                 icon: Icon(Icons.settings),
                 color: Color(0xff636363),
                 iconSize: 28,
-                onPressed: () {})
+                onPressed: () {
+                  Navigator.pushNamed(context, '/setting');
+                })
           ],
         ),
         body: Container(
@@ -291,7 +293,9 @@ class _DailyCalendarState extends State<DailyCalendar> {
               icon: Icon(Icons.settings),
               color: Color(0xff636363),
               iconSize: 28,
-              onPressed: () {})
+              onPressed: () {
+                Navigator.pushNamed(context, '/setting');
+              })
         ],
       ),
       body: Container(

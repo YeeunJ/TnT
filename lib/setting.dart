@@ -54,7 +54,7 @@ class _settingPageState extends State<settingPage> {
             color: Colors.black54,
           ),
         ),
-        leading:
+        /*leading:
         IconButton(
           icon: Icon(
             Icons.autorenew,
@@ -66,7 +66,7 @@ class _settingPageState extends State<settingPage> {
             await setState(() => loaded = true);
             //_formKey.currentState.reset();
           },
-        ),
+        ),*/
         actions: <Widget>[
           IconButton(
             icon: Icon(
@@ -74,6 +74,7 @@ class _settingPageState extends State<settingPage> {
             ),
             color: Colors.black54,
             onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("반영 되었습니다.")));
               Navigator.pop(context);
             },
           ),
@@ -246,5 +247,4 @@ class ExampleFormState extends State<ExampleForm> {
       },
     );
   }
-
 }

@@ -78,7 +78,7 @@ class _addTimeTableState extends State<addTimeTable> {
           },
         ),
         actions: <Widget>[
-          IconButton(
+          /*IconButton(
             icon: Icon(
               Icons.check,
             ),
@@ -86,7 +86,7 @@ class _addTimeTableState extends State<addTimeTable> {
             onPressed: () {
               Navigator.pop(context);
             },
-          ),
+          ),*/
         ],
       ),
       body: ExampleForm(orientation, _showMaterialonIOS, _scaffoldKey, appState,
@@ -154,7 +154,7 @@ class ExampleFormState extends State<ExampleForm> {
       print("저장되었습니다.");
       await widget.appState.addTimeTable( _timeTableModel);
       await resetPressed();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("저장되었습니다.")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("저장 되었습니다.")));
     } else {
       print("실패함");
       setState(() => _autoValidateMode = AutovalidateMode.onUserInteraction);
@@ -193,7 +193,7 @@ class ExampleFormState extends State<ExampleForm> {
         CardSettingsSection(
           children: <CardSettingsWidget>[
             _buildCardSettingsButton_Save(),
-            _buildCardSettingsButton_Reset(),
+           // _buildCardSettingsButton_Reset(),
           ],
         ),
       ],
@@ -252,8 +252,8 @@ class ExampleFormState extends State<ExampleForm> {
   CardSettingsButton _buildCardSettingsButton_Save() {
     return CardSettingsButton(
       label: '등록',
-      backgroundColor: Color(0xffd7f2d3),
-      //backgroundColor: Colors.green,
+      //backgroundColor: Color(0xffd7f2d3),
+      backgroundColor: Color(0xffdddddd),
       onPressed: savePressed,
     );
   }

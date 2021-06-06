@@ -5,6 +5,7 @@ import 'login.dart';
 import 'addTimeTable.dart';
 import 'editTimeTable.dart';
 import 'setting.dart';
+import 'dataAnalysis.dart';
 
 
 class TnT extends StatelessWidget {
@@ -24,6 +25,7 @@ class TnT extends StatelessWidget {
           '/addTimeTable': (context) => addTimeTable(),
           '/editTimeTable': (context) => editTimeTable(),
           '/setting': (context) => settingPage(),
+          '/dataAnalysis': (context) => dataAnalysisPage(),
         }
     );
   }

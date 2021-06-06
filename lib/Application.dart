@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import './model.dart';
 
 enum ApplicationLoginState {
   loggedOut,
@@ -41,7 +42,7 @@ class ApplicationState extends ChangeNotifier {
                   Meeting(document.data()['eventName'], document.data()['from'], document.data()['to'], document.data()['background'], document.data()['isAllDay'])
               );
             }else{
-              print(document.data()['eventName']+" todolist");
+              //print(document.data()['eventName']+" todolist");
               _todolists.add(
                   Schedule(document.id, document.data()['eventName'], document.data()['from'], null, null, null, document.data()['check'])
               );
@@ -137,6 +138,33 @@ class ApplicationState extends ChangeNotifier {
     }
 
     FirebaseFirestore.instance.collection(uid).doc(id).delete();
+  }
+
+  //todo
+  Future<DocumentReference> addTimeTable(TimeTableModel t) {
+    if (_loginState != ApplicationLoginState.loggedIn) {
+      throw Exception('Must be logged in');
+    }
+    var repeats = "";
+    t.repeats.forEach((item){
+      repeats+= item;
+      repeats+= "@";
+    });
+    final data =
+    {
+      "name": t.name,
+      "isAllday": t.isAllday,
+      "start": t.start,
+      "end": t.end,
+      "repeats": repeats,
+      "alarm": t.alarm,
+      "calendar": t.calendar,
+      "regDate" : DateTime.now().millisecondsSinceEpoch,
+      "editDate": DateTime.now().millisecondsSinceEpoch,
+    };
+    FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid).add(
+        data
+    );
   }
 
   Future<DocumentReference> addTodoList(Schedule item) async {

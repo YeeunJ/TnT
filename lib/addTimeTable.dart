@@ -7,7 +7,9 @@ import 'package:card_settings/card_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:provider/provider.dart';
 import 'model.dart';
+import './Application.dart';
 
 typedef LabelledValueChanged<T, U> = void Function(T label, U value);
 bool loaded = false;
@@ -50,7 +52,9 @@ class _addTimeTableState extends State<addTimeTable> {
       );
     }
 
-    return Scaffold(
+    return Consumer<ApplicationState>(
+        builder: (context, appState, _) =>
+      Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -85,9 +89,9 @@ class _addTimeTableState extends State<addTimeTable> {
           ),
         ],
       ),
-      body: ExampleForm(orientation, _showMaterialonIOS, _scaffoldKey,
+      body: ExampleForm(orientation, _showMaterialonIOS, _scaffoldKey, appState,
           key: _formWidgetKey, onValueChanged: showSnackBar),
-    );
+    ),);
   }
 }
 
@@ -95,7 +99,9 @@ class ExampleForm extends StatefulWidget {
   const ExampleForm(
       this.orientation,
       this.showMaterialonIOS,
-      this.scaffoldKey, {
+      this.scaffoldKey,
+      this.appState,
+      {
         this.onValueChanged,
         Key key,
       }) : super(key: key);
@@ -103,6 +109,7 @@ class ExampleForm extends StatefulWidget {
   final Orientation orientation;
   final bool showMaterialonIOS;
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final ApplicationState appState;
 
   final LabelledValueChanged<String, dynamic> onValueChanged;
 
@@ -115,7 +122,6 @@ class ExampleFormState extends State<ExampleForm> {
   @override
   void initState() {
     super.initState();
-
     initModel();
   }
 
@@ -146,6 +152,9 @@ class ExampleFormState extends State<ExampleForm> {
     if (form.validate()) {
       form.save();
       print("저장되었습니다.");
+      await widget.appState.addTimeTable( _timeTableModel);
+      await resetPressed();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("저장되었습니다.")));
     } else {
       print("실패함");
       setState(() => _autoValidateMode = AutovalidateMode.onUserInteraction);

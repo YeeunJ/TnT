@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage>{
                             ),
                           ),
                           onPressed: () async{
-                            await Firebase.initializeApp(); //나중에 옮기기
+                            //await Firebase.initializeApp(); //나중에 옮기기
                             final value = await (userCredential = await signInWithGoogle());
                             final test = Navigator.pop(context);
                             Navigator.pushNamed(

@@ -1,0 +1,35 @@
+name: tnt
+description: A new Flutter application.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  camera: ^0.5.7+4
+  cupertino_icons: ^1.0.2
+  card_settings: ^2.0.2
+  syncfusion_flutter_calendar: ^19.1.64
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  cloud_firestore: ^1.0.0
+  firebase_auth: ^1.0.0
+  provider: ^5.0.0
+  #google login
+  google_sign_in: "^4.5.1"
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - images/logo.png
+    - images/google_logo.png

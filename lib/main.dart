@@ -4,13 +4,14 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:provider/provider.dart';
 import './addTimeTable.dart';
+import './app.dart';
 import 'Application.dart';
 
 void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => ApplicationState(),
-      child: MyApp(),
+      child: TnT(),
     ),
   );
 }

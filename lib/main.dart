@@ -183,6 +183,13 @@ class _MonthlyCalendarState extends State<MonthlyCalendar> {
                     isScrollControlled: true);
               }),
           IconButton(
+              icon: Icon(Icons.bar_chart),
+              color: Color(0xff636363),
+              iconSize: 28,
+              onPressed: () {
+                Navigator.pushNamed(context, '/dataAnalysis');
+              }),
+          IconButton(
               icon: Icon(Icons.settings),
               color: Color(0xff636363),
               iconSize: 28,
@@ -234,6 +241,13 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
                       context: context,
                       builder: (context) => AddTaskScreen(),
                       isScrollControlled: true);
+                }),
+            IconButton(
+                icon: Icon(Icons.bar_chart),
+                color: Color(0xff636363),
+                iconSize: 28,
+                onPressed: () {
+                  Navigator.pushNamed(context, '/dataAnalysis');
                 }),
             IconButton(
                 icon: Icon(Icons.settings),
@@ -288,6 +302,13 @@ class _DailyCalendarState extends State<DailyCalendar> {
                     context: context,
                     builder: (context) => AddTaskScreen(),
                     isScrollControlled: true);
+              }),
+          IconButton(
+              icon: Icon(Icons.bar_chart),
+              color: Color(0xff636363),
+              iconSize: 28,
+              onPressed: () {
+                Navigator.pushNamed(context, '/dataAnalysis');
               }),
           IconButton(
               icon: Icon(Icons.settings),

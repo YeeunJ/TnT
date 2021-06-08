@@ -195,6 +195,13 @@ class _MonthlyCalendarState extends State<MonthlyCalendar> {
               iconSize: 28,
               onPressed: () {
                 Navigator.pushNamed(context, '/setting');
+              }),
+          IconButton(
+              icon: Icon(Icons.headset_rounded),
+              color: Color(0xff636363),
+              iconSize: 28,
+              onPressed: () {
+                Navigator.pushNamed(context, '/addBySpeech');
               })
         ],
       ),

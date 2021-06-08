@@ -18,6 +18,8 @@ dependencies:
   card_settings: ^2.0.2
   syncfusion_flutter_calendar: ^19.1.64
   syncfusion_flutter_charts: ^19.1.64
+  speech_to_text: ^2.2.0
+  avatar_glow: ^1.2.0
 
 dev_dependencies:
   flutter_test:

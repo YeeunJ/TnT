@@ -6,6 +6,7 @@ import 'addTimeTable.dart';
 import 'editTimeTable.dart';
 import 'setting.dart';
 import 'dataAnalysis.dart';
+import 'speechToText.dart';
 
 
 class TnT extends StatelessWidget {
@@ -26,6 +27,7 @@ class TnT extends StatelessWidget {
           '/editTimeTable': (context) => editTimeTable(),
           '/setting': (context) => settingPage(),
           '/dataAnalysis': (context) => dataAnalysisPage(),
+          '/addBySpeech' : (context) => SpeechPage()
         }
     );
   }

@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'model.dart';
+import 'global.dart' as global;
 
 typedef LabelledValueChanged<T, U> = void Function(T label, U value);
 bool loaded = false;
@@ -74,8 +75,13 @@ class _settingPageState extends State<settingPage> {
             ),
             color: Colors.black54,
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("반영 되었습니다.")));
-              Navigator.pop(context);
+              final form = _formKey.currentState;
+              if (form.validate()) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("반영 되었습니다.")));
+                Navigator.pop(context);
+              } else {
+
+              }
             },
           ),
         ],
@@ -237,12 +243,14 @@ class ExampleFormState extends State<ExampleForm> {
       values: allThemesValues,
       validator: (String value) {
         if (value == null || value.isEmpty) return '선택해주세요.';
+        if (value != 'g' ) return '현재 지원되지 않는 기능입니다';
         return null;
       },
       onSaved: (value) => _settingModel.theme = value,
       onChanged: (value) {
         setState(() {
-          _settingModel.theme = value;
+          //_settingModel.theme = value;
+
         });
       },
     );

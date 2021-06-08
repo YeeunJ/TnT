@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import './addTimeTable.dart';
 import './app.dart';
 import 'Application.dart';
+import 'global.dart' as global;
 
 void main() {
   runApp(
@@ -22,8 +23,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TnT',
       theme: ThemeData(
-        primaryColor: Colors.white,
-        accentColor: Color(0xff636363),
+        primaryColor: global.primary,
+        accentColor: global.accent,
       ),
       home: myCalendar(),
     );
@@ -70,6 +71,10 @@ class _myCalendarState extends State<myCalendar> with TickerProviderStateMixin {
       addTimeTable()
     ];
 
+    Color background = global.background;
+    Color accent = global.accent;
+    const color =  Color(0xffe0e0e0);
+
     return Scaffold(
       body: _tabWidgets[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -77,23 +82,26 @@ class _myCalendarState extends State<myCalendar> with TickerProviderStateMixin {
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today_outlined),
               label: 'month',
-              backgroundColor: Color(0xffe0e0e0)),
+              backgroundColor: color
+          ),
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today),
               label: 'week',
-              backgroundColor: Color(0xffe0e0e0)),
+              backgroundColor: color
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_view_day),
             label: 'day',
-            backgroundColor: Color(0xffe0e0e0),
+            backgroundColor: color,
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.add),
               label: 'add',
-              backgroundColor: Color(0xffe0e0e0)),
+              backgroundColor: color
+          ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color(0xff636363),
+        selectedItemColor: accent,
         onTap: _onItemTapped,
         iconSize: 22,
       ),
@@ -171,7 +179,7 @@ class _MonthlyCalendarState extends State<MonthlyCalendar> {
         actions: [
           IconButton(
               icon: Icon(Icons.list),
-              color: Color(0xff636363),
+              color: global.accent,
               iconSize: 28,
               onPressed: () {
                 showModalBottomSheet(
@@ -184,14 +192,14 @@ class _MonthlyCalendarState extends State<MonthlyCalendar> {
               }),
           IconButton(
               icon: Icon(Icons.bar_chart),
-              color: Color(0xff636363),
+              color: global.accent,
               iconSize: 28,
               onPressed: () {
                 Navigator.pushNamed(context, '/dataAnalysis');
               }),
           IconButton(
               icon: Icon(Icons.settings),
-              color: Color(0xff636363),
+              color: global.accent,
               iconSize: 28,
               onPressed: () {
                 Navigator.pushNamed(context, '/setting');
@@ -238,7 +246,7 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
           actions: [
             IconButton(
                 icon: Icon(Icons.list),
-                color: Color(0xff636363),
+                color: global.accent,
                 iconSize: 28,
                 onPressed: () {
                   showModalBottomSheet(
@@ -251,14 +259,14 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
                 }),
             IconButton(
                 icon: Icon(Icons.bar_chart),
-                color: Color(0xff636363),
+                color: global.accent,
                 iconSize: 28,
                 onPressed: () {
                   Navigator.pushNamed(context, '/dataAnalysis');
                 }),
             IconButton(
                 icon: Icon(Icons.settings),
-                color: Color(0xff636363),
+                color: global.accent,
                 iconSize: 28,
                 onPressed: () {
                   Navigator.pushNamed(context, '/setting');
@@ -299,7 +307,7 @@ class _DailyCalendarState extends State<DailyCalendar> {
         actions: [
           IconButton(
               icon: Icon(Icons.list),
-              color: Color(0xff636363),
+              color: global.accent,
               iconSize: 28,
               onPressed: () {
                 showModalBottomSheet(
@@ -312,14 +320,14 @@ class _DailyCalendarState extends State<DailyCalendar> {
               }),
           IconButton(
               icon: Icon(Icons.bar_chart),
-              color: Color(0xff636363),
+              color: global.accent,
               iconSize: 28,
               onPressed: () {
                 Navigator.pushNamed(context, '/dataAnalysis');
               }),
           IconButton(
               icon: Icon(Icons.settings),
-              color: Color(0xff636363),
+              color: global.accent,
               iconSize: 28,
               onPressed: () {
                 Navigator.pushNamed(context, '/setting');
@@ -628,8 +636,8 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                       decoration: InputDecoration(
                         hintText: '할 일을 입력하세요.',
                         border: UnderlineInputBorder(),
-                        focusColor: Color(0xff636363),
-                        fillColor: Color(0xff636363),
+                        focusColor: global.accent,
+                        fillColor: global.accent,
                       )
                   ),
                 ),

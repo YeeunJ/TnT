@@ -7,6 +7,7 @@ import 'editTimeTable.dart';
 import 'setting.dart';
 import 'dataAnalysis.dart';
 import 'speechToText.dart';
+import 'global.dart' as global;
 
 
 class TnT extends StatelessWidget {
@@ -15,8 +16,8 @@ class TnT extends StatelessWidget {
     return MaterialApp(
         title: 'TnT',
         theme: ThemeData(
-          primaryColor: Colors.white,
-          accentColor:  Color(0xff636363),
+          primaryColor: global.primary,
+          accentColor:  global.accent,
         ),
         home: myCalendar(),
         initialRoute: '/login',

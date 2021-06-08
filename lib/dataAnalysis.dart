@@ -48,7 +48,7 @@ class _dataAnalysisPageState extends State<dataAnalysisPage> {
 
 
   final List<Data1> chartData1 = [
-    Data1(date.subtract(Duration(days: 4)), 30),
+    Data1(date.subtract(Duration(days: 4)), 35),
     Data1(date.subtract(Duration(days: 3)), 65),
     Data1(date.subtract(Duration(days: 2)), 58),
     Data1(date.subtract(Duration(days: 1)), 87),
@@ -73,7 +73,9 @@ class _dataAnalysisPageState extends State<dataAnalysisPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Consumer<ApplicationState>(
+        builder: (context, appState, _) =>
+      Scaffold(
       appBar: AppBar(
         title: Text('활동 분석'),
         actions: [
@@ -177,6 +179,6 @@ class _dataAnalysisPageState extends State<dataAnalysisPage> {
             ],
           )
       ),
-    );
+    ));
   }
 }

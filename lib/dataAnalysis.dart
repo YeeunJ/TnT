@@ -12,22 +12,25 @@ import './Application.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 String dropdownValue = 'TODO 수행률(%)';
+DateTime now = new DateTime.now();
+DateTime date = new DateTime(now.year, now.month, now.day);
+final format = DateFormat('MM/dd');
 
 class Data1{
   Data1(this.day, this.todo);
-  final String day;
+  final DateTime day;
   final double todo;
 }
 
 class Data2{
   Data2(this.day, this.todo);
-  final String day;
+  final DateTime day;
   final double todo;
 }
 
 class Data3{
   Data3(this.day, this.sales, this.sales2, this.sales3, this.sales4);
-  final String day;
+  final DateTime day;
   final double sales;
   final double sales2;
   final double sales3;
@@ -43,28 +46,29 @@ class dataAnalysisPage extends StatefulWidget {
 
 class _dataAnalysisPageState extends State<dataAnalysisPage> {
 
+
   final List<Data1> chartData1 = [
-    Data1("6/2", 20),
-    Data1("6/3", 85),
-    Data1("6/4", 53),
-    Data1("6/5", 60),
-    Data1("6/6", 90),
+    Data1(date.subtract(Duration(days: 4)), 30),
+    Data1(date.subtract(Duration(days: 3)), 65),
+    Data1(date.subtract(Duration(days: 2)), 58),
+    Data1(date.subtract(Duration(days: 1)), 87),
+    Data1(date, 90),
   ];
 
   final List<Data2> chartData2 = [
-    Data2("6/2", 3),
-    Data2("6/3", 7),
-    Data2("6/4", 6),
-    Data2("6/5", 2),
-    Data2("6/6", 9),
+    Data2(date.subtract(Duration(days: 4)), 3),
+    Data2(date.subtract(Duration(days: 3)), 7),
+    Data2(date.subtract(Duration(days: 2)), 6),
+    Data2(date.subtract(Duration(days: 1)), 2),
+    Data2(date, 9),
   ];
 
   final List<Data3> chartData3 = [
-    Data3("6/2", 1,2,3,4),
-    Data3("6/3", 0,3,2,4),
-    Data3("6/4", 1,2,2,1),
-    Data3("6/5", 1,0,0,4),
-    Data3("6/6", 5,3,5,2),
+    Data3(date.subtract(Duration(days: 4)), 1,2,3,4),
+    Data3(date.subtract(Duration(days: 3)), 0,3,2,4),
+    Data3(date.subtract(Duration(days: 2)), 1,2,2,1),
+    Data3(date.subtract(Duration(days: 1)), 1,0,0,4),
+    Data3(date, 5,3,5,2),
   ];
 
   @override
@@ -127,7 +131,7 @@ class _dataAnalysisPageState extends State<dataAnalysisPage> {
                     // Renders line chart
                     LineSeries<Data1, String>(
                         dataSource: chartData1,
-                        xValueMapper: (Data1 sales, _) => sales.day,
+                        xValueMapper: (Data1 sales, _) => format.format(sales.day),
                         yValueMapper: (Data1 sales, _) => sales.todo
                     )
                   ]
@@ -139,7 +143,7 @@ class _dataAnalysisPageState extends State<dataAnalysisPage> {
                     // Renders line chart
                     ColumnSeries<Data2, String>(
                         dataSource: chartData2,
-                        xValueMapper: (Data2 sales, _) => sales.day,
+                        xValueMapper: (Data2 sales, _) => format.format(sales.day),
                         yValueMapper: (Data2 sales, _) => sales.todo
                     )
                   ]
@@ -150,22 +154,22 @@ class _dataAnalysisPageState extends State<dataAnalysisPage> {
                   series: <ChartSeries>[
                     StackedColumn100Series<Data3, String>(
                         dataSource: chartData3,
-                        xValueMapper: (Data3 sales, _) => sales.day,
+                        xValueMapper: (Data3 sales, _) => format.format(sales.day),
                         yValueMapper: (Data3 sales, _) => sales.sales
                     ),
                     StackedColumn100Series<Data3, String>(
                         dataSource: chartData3,
-                        xValueMapper: (Data3 sales, _) => sales.day,
+                        xValueMapper: (Data3 sales, _) => format.format(sales.day),
                         yValueMapper: (Data3 sales, _) => sales.sales2
                     ),
                     StackedColumn100Series<Data3, String>(
                         dataSource: chartData3,
-                        xValueMapper: (Data3 sales, _) => sales.day,
+                        xValueMapper: (Data3 sales, _) => format.format(sales.day),
                         yValueMapper: (Data3 sales, _) => sales.sales3
                     ),
                     StackedColumn100Series<Data3, String>(
                         dataSource: chartData3,
-                        xValueMapper: (Data3 sales, _) => sales.day,
+                        xValueMapper: (Data3 sales, _) => format.format(sales.day),
                         yValueMapper: (Data3 sales, _) => sales.sales4
                     )
                   ]

@@ -24,7 +24,7 @@ class ApplicationState extends ChangeNotifier {
   ApplicationLoginState get loginState => _loginState;
 
   Future<void> init() async {
-    await Firebase.initializeApp(); //로그인 옮길거면 옮기구 이거 주석 없애주세여!!ㅎㅎ 앞에서 하길래 일단 빼놨다!!
+    //await Firebase.initializeApp(); //로그인 옮길거면 옮기구 이거 주석 없애주세여!!ㅎㅎ 앞에서 하길래 일단 빼놨다!!
     print('init');
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {

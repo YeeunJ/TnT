@@ -65,6 +65,9 @@ class ApplicationState extends ChangeNotifier {
   List<Schedule> get todolistWhole => _todolists;
   List<Meeting> _timetables = [];
   List<Meeting> get timetables => _timetables;
+  List<int> _data1 = [30,65,58,87,90];
+  List<int> _data2 = [3,7,6,2,9];
+  List<List<int>> _data3 = [[1,2,3,4], [0,3,2,4], [1,2,2,1], [1,0,0,4], [5,3,5,2]];
 
   Future<UserCredential> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();

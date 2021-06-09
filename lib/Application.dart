@@ -24,38 +24,61 @@ class ApplicationState extends ChangeNotifier {
   ApplicationLoginState get loginState => _loginState;
 
   Future<void> init() async {
-    //await Firebase.initializeApp(); //로그인 옮길거면 옮기구 이거 주석 없애주세여!!ㅎㅎ 앞에서 하길래 일단 빼놨다!!
+    await Firebase.initializeApp(); //로그인 옮길거면 옮기구 이거 주석 없애주세여!!ㅎㅎ 앞에서 하길래 일단 빼놨다!!
     print('init');
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
         _loginState = ApplicationLoginState.loggedIn;
         _meetingSubscription = FirebaseFirestore.instance
-            .collection(FirebaseAuth.instance.currentUser.uid)
+            .collection(FirebaseAuth.instance.currentUser.uid+":schedule")
             .snapshots()
             .listen((snapshot) {
           _timetables = [];
           _todolists = [];
+          _todolistsWhole = [];
           snapshot.docs.forEach((document) {
-            if(document.data()['background'] != null){
-              print(document.data()['eventName']+" timetable");
+            if (document.data()['background'] != null) {
+              print(document.data()['eventName'] + " timetable");
               _timetables.add(
-                  Meeting(document.data()['eventName'], document.data()['from'], document.data()['to'], document.data()['background'], document.data()['isAllDay'])
+                  Meeting(document.data()['eventName'], document.data()['from'],
+                      document.data()['to'], document.data()['background'],
+                      document.data()['isAllDay'])
               );
-            }else{
-              //print(document.data()['eventName']+" todolist");
-              _todolists.add(
-                  Schedule(document.id, document.data()['eventName'], document.data()['from'], null, null, null, document.data()['check'])
-              );
+            } else {
+              if (document.data()['from'] != null) {
+                print(document.data()['eventName'] + " todolist");
+                _todolists.add(
+                    Schedule(
+                        document.id,
+                        document.data()['eventName'],
+                        document.data()['from'].toDate(),
+                        document.data()['to'].toDate(),
+                        null,
+                        null,
+                        document.data()['check'])
+                );
+              } else {
+                print(document.data()['eventName'] + " todolistWhole");
+                _todolistsWhole.add(
+                    Schedule(
+                        document.id,
+                        document.data()['eventName'],
+                        document.data()['from'],
+                        document.data()['to'].toDate(),
+                        null,
+                        null,
+                        document.data()['check'])
+                );
+              }
             }
           });
+          notifyListeners();
         });
-        notifyListeners();
       } else {
         _loginState = ApplicationLoginState.loggedOut;
       }
-
-      notifyListeners();
     });
+    notifyListeners();
   }
 
   StreamSubscription<QuerySnapshot> _meetingSubscription;
@@ -82,7 +105,15 @@ class ApplicationState extends ChangeNotifier {
     _loginState = ApplicationLoginState.loggedIn;
     return credit;
   }
-  Future<void> readAllProducts() async {
+  List<Schedule> getTodolistsWhole(){
+    //addTodoList();
+    readAllProducts();
+    print(_todolistsWhole);
+
+    return _todolistsWhole;
+  }
+
+  void readAllProducts() {
     print(FirebaseAuth.instance.currentUser.uid);
     _meetingSubscription = FirebaseFirestore.instance
         .collection(FirebaseAuth.instance.currentUser.uid+":schedule")
@@ -90,29 +121,30 @@ class ApplicationState extends ChangeNotifier {
         .listen((snapshot) {
       _timetables = [];
       _todolists = [];
+      _todolistsWhole = [];
       snapshot.docs.forEach((document) {
         if(document.data()['background'] != null){
-          print(document.data()['eventName']+" timetable");
+          print(document.data()['eventName']+" timetable//");
           _timetables.add(
               Meeting(document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), document.data()['background'], document.data()['isAllDay'])
           );
         }else{
           if(document.data()['from'] != null){
-            print(document.data()['eventName']+" todolist");
+            print(document.data()['eventName']+" todolist//");
             _todolists.add(
                 Schedule(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), null, null, document.data()['check'])
             );
           }else{
-            print(document.data()['eventName']+" todolistWhole");
+            print(document.data()['eventName']+" todolistWhole//");
             _todolistsWhole.add(
                 Schedule(document.id, document.data()['eventName'], document.data()['from'], document.data()['to'].toDate(), null, null, document.data()['check'])
             );
           }
         }
       });
-      notifyListeners();
     });
   }
+
 
   Future<void> readTodoListProducts() async {
 

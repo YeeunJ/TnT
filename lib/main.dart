@@ -41,9 +41,9 @@ class _myCalendarState extends State<myCalendar> with TickerProviderStateMixin {
 
   int _selectedIndex = 0;
 
-  List<Meeting> meetings = <Meeting>[];
-  List<Schedule> todolists = <Schedule>[];
-  List<Schedule> todolistsWhole = <Schedule>[];
+//  List<Meeting> meetings = <Meeting>[];
+//  List<Schedule> todolists = <Schedule>[];
+//  List<Schedule> todolistsWhole = <Schedule>[];
 
   bool _checkbox = false;
   bool _checkbox1 = false;
@@ -56,18 +56,34 @@ class _myCalendarState extends State<myCalendar> with TickerProviderStateMixin {
   String _selectedDate = "";
 
   void _onItemTapped(int index) {
+    print(_todolistsWhole);
     setState(() {
       _selectedIndex = index;
     });
   }
+  List<Schedule> _todolistsWhole = [];
+  List<Meeting> _timetables = [];
+  List<Schedule> _todolists = [];
+  bool itemsListening = false;
 
   @override
   Widget build(BuildContext context) {
 
+    if (!itemsListening) {
+      print("test");
+      Provider.of<ApplicationState>(context, listen: false).addListener(() {
+        setState(() {
+          _todolistsWhole = Provider.of<ApplicationState>(context, listen: false).getTodolistsWhole();
+        });
+        print(_todolistsWhole);
+      });
+      itemsListening = true;
+    }
+
     final List<Widget> _tabWidgets = [
-      MonthlyCalendar(meetingList: meetings),
-      WeeklyCalendar(meetingList: meetings),
-      DailyCalendar(meetingList: meetings),
+      MonthlyCalendar(meetingList: _timetables),
+      WeeklyCalendar(meetingList: _timetables),
+      DailyCalendar(meetingList: _timetables, todolistsWhole: _todolistsWhole),
       addTimeTable()
     ];
 
@@ -285,22 +301,27 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
 
 // 일간
 class DailyCalendar extends StatefulWidget {
-  DailyCalendar({Key key, @required this.meetingList}) : super(key: key);
+  DailyCalendar({Key key, @required this.meetingList , @required this.todolistsWhole}) : super(key: key);
   List<Meeting> meetingList;
-
+  List<Schedule> todolistsWhole = [];
   @override
-  _DailyCalendarState createState() => _DailyCalendarState();
+  _DailyCalendarState createState() => _DailyCalendarState(todolistsWhole: todolistsWhole);
 }
 
 class _DailyCalendarState extends State<DailyCalendar> {
   bool _ischecked = false;
   bool _ischecked2 = false;
   bool _ischecked3 = false;
+  List<Schedule> todolistsWhole = []
+  ;
+  _DailyCalendarState({@required this.todolistsWhole});
 
   TextEditingController todoController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    print(todolistsWhole);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('calendar'),
@@ -388,7 +409,7 @@ class _DailyCalendarState extends State<DailyCalendar> {
                     Consumer<ApplicationState>(
                         builder: (context, appState, _) => Expanded(
                           child: ListView(
-                            children: appState.todolistWhole.map((item) {
+                            children: todolistsWhole.map((item) {
                               return Row(
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,

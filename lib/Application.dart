@@ -170,17 +170,19 @@ class ApplicationState extends ChangeNotifier {
     });
     final data =
     {
-      "name": t.name,
-      "isAllday": t.isAllday,
-      "start": t.start,
-      "end": t.end,
-      "repeats": repeats,
+      "background": 1,
+      "eventName": t.name,
+      "isAllDay": t.isAllday,
+      "from": t.start,
+      "to": t.end,
+      "recurrenceRule": repeats,
       "alarm": t.alarm,
       "calendar": t.calendar,
-      "regDate" : DateTime.now().millisecondsSinceEpoch,
-      "editDate": DateTime.now().millisecondsSinceEpoch,
+      "timestamp" : FieldValue.serverTimestamp(),
+      "editDate": FieldValue.serverTimestamp(),
+      "check": false,
     };
-    FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid).add(
+    FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid+':schedule').add(
         data
     );
   }

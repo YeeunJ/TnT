@@ -212,13 +212,13 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-  Future<void> updateWholetoToday(Meeting item) async {
+  Future<void> updateWholetoToday(Meeting item, DateTime value) async {
     if (_loginState != ApplicationLoginState.loggedIn) {
       throw Exception('Must be logged in');
     }
     await FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid+':schedule').doc(item.id).update({
       'eventName': item.eventName,
-      'from': FieldValue.serverTimestamp(),
+      'from': value,
       'to': item.to,
       'background': item.background,
       'isAllDay': item.isAllDay,
@@ -228,7 +228,7 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-  Future<void> updateTodaytoWhole(Meeting item) async {
+  Future<void> updateTodaytoWhole(Meeting item, DateTime value) async {
     if (_loginState != ApplicationLoginState.loggedIn) {
       throw Exception('Must be logged in');
     }

@@ -390,7 +390,7 @@ class DailyCalendar extends StatefulWidget {
 }
 
 class _DailyCalendarState extends State<DailyCalendar> {
-  bool _ischecked = false;
+  var _ischecked  = false;
   bool _ischecked2 = false;
   bool _ischecked3 = false;
   List<Meeting> meetingList = [];
@@ -398,6 +398,7 @@ class _DailyCalendarState extends State<DailyCalendar> {
   List<Meeting> todolistToday = [];
   List<Meeting> todolistWhole = [];
   bool itemsListening = false;
+  ValueNotifier<DateTime> _today = ValueNotifier<DateTime>(DateTime.now());
 
   _DailyCalendarState({@required this.meetingList});
 
@@ -490,95 +491,103 @@ class _DailyCalendarState extends State<DailyCalendar> {
                 child: SfCalendar(
                   view: CalendarView.day,
                   dataSource: MeetingDataSource(schedule),
+                    onViewChanged: (ViewChangedDetails details) {
+                      _today.value = details.visibleDates[0];
+                      print(_today);
+                    }
                 ),
               ),
               Expanded(
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
-                      child: Text('TODAY'),
-                    ),
-                    Consumer<ApplicationState>(
-                        builder: (context, appState, _) => Expanded(
-                          child: ListView(
-                            children: todolistToday.map((item) {
-                              return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Checkbox(
-                                    value: _ischecked,
-                                    onChanged: (bool value) {
-                                      Provider.of<ApplicationState>(context, listen: false).updateCheck(item, value);
-                                      setState(() {
-                                        _ischecked = value;
-                                      });
-                                    },
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      item.eventName,
-                                      style: TextStyle(fontSize: 13),
-                                    ),
-                                  ),
-                                  IconButton(
-                                      icon: Icon(Icons.minimize),
-                                      iconSize: 13,
-                                      color: Colors.blue,
-                                      onPressed: () {
-                                        Provider.of<ApplicationState>(context, listen: false).updateTodaytoWhole(item);
-                                      })
-                                ],
-                              );
-                            },).toList(),
-                          ),
-                        )),
-                    Divider(
-                      color: Colors.black45,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
-                      child: Text('WHOLE'),
-                    ),
-                    Consumer<ApplicationState>(
-                        builder: (context, appState, _) => Expanded(
-                          child: ListView(
-                            children: todolistWhole.map((item) {
-                              return Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Checkbox(
-                                    value: _ischecked,
-                                    onChanged: (value) {
-                                      Provider.of<ApplicationState>(context, listen: false).updateCheck(item, value);
-                                      setState(() {
-                                        _ischecked = !_ischecked;
-                                      });
-                                    },
-                                  ),
-                                  Expanded(child: Text(item.eventName)),
-                                  IconButton(
-                                      icon: Icon(Icons.add),
-                                      iconSize: 13,
-                                      color: Colors.redAccent,
-                                      onPressed: () {
-                                        Provider.of<ApplicationState>(context, listen: false).updateWholetoToday(item);
-                                      })
-                                ],
-                              );
-                            }).toList(),
-                          ),
-                        ))
-                  ],
-                ),
+                child:ValueListenableBuilder(
+                  valueListenable: _today, // 사용할 변수를 지정. _counter가 변경 되면 자동 호출
+                  builder: (BuildContext context, DateTime value, Widget child) {
+                    return Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
+                          child: Text('TODAY'),
+                        ),
+                        Consumer<ApplicationState>(
+                            builder: (context, appState, _) => Expanded(
+                              child: ListView(
+                                children: todolistToday.map((item) {
+                                  return
+                                    value.compareTo(item.from) == 0?
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Checkbox(
+                                          value: item.check,
+                                          onChanged: (bool value2) {
+                                            Provider.of<ApplicationState>(context, listen: false).updateCheck(item, value2);
+
+                                          },
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            item.eventName,
+                                            style: TextStyle(fontSize: 13),
+                                          ),
+                                        ),
+                                        IconButton(
+                                            icon: Icon(Icons.minimize),
+                                            iconSize: 13,
+                                            color: Colors.blue,
+                                            onPressed: () {
+                                              Provider.of<ApplicationState>(context, listen: false).updateTodaytoWhole(item, value);
+                                            })
+                                      ],
+                                    ) : SizedBox();
+                                },).toList(),
+                              ),
+                            )),
+                        Divider(
+                          color: Colors.black45,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
+                          child: Text('WHOLE'),
+                        ),
+                        Consumer<ApplicationState>(
+                            builder: (context, appState, _) => Expanded(
+                              child: ListView(
+                                children: todolistWhole.map((item) {
+                                  return
+                                    item.to == null || value.compareTo(item.to) <= 0?
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Checkbox(
+                                          value: item.check,
+                                          onChanged: (value2) {
+                                            Provider.of<ApplicationState>(context, listen: false).updateCheck(item, value2);
+
+                                          },
+                                        ),
+                                        Expanded(child: Text(item.eventName)),
+                                        IconButton(
+                                            icon: Icon(Icons.add),
+                                            iconSize: 13,
+                                            color: Colors.redAccent,
+                                            onPressed: () {
+                                              Provider.of<ApplicationState>(context, listen: false).updateWholetoToday(item, value);
+                                            })
+                                      ],
+                                    ): SizedBox();
+                                }).toList(),
+                              ),
+                            ))
+                      ],
+                    );
+                  })
+
               )
             ],
           )),
     );
   }
 }
-
 // 일간, 전체 일정 추가하기 위젯
 class addWidget extends StatefulWidget {
   @override
@@ -608,13 +617,40 @@ class AddTaskScreen extends StatefulWidget {
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
   bool _checkbox = false;
+  List<Meeting> meetingList = [];
+  List<Meeting> schedule = [];
   List<Meeting> todolistToday = [];
   List<Meeting> todolistWhole = [];
-
+  bool itemsListening = false;
   _AddTaskScreenState({@required this.todolistToday,  @required this.todolistWhole});
 
   @override
   Widget build(BuildContext context) {
+
+    if (!itemsListening) {
+      print("test1");
+      Provider.of<ApplicationState>(context, listen: false).addListener(() {
+        setState(() {
+          meetingList = Provider.of<ApplicationState>(context, listen: false).getTodolistsWhole();
+        });
+        print(meetingList);
+        schedule = [];
+        todolistToday = [];
+        todolistWhole = [];
+        for(var meeting in meetingList){
+          if(meeting.recurrenceRule != null){
+            schedule.add(meeting);
+          }
+          else if(meeting.from != null){
+            todolistToday.add(meeting);
+          }else{
+            todolistWhole.add(meeting);
+          }
+        }
+      });
+      itemsListening = true;
+    }
+
     return Container(
         height: MediaQuery.of(context).size.height / 2,
         child: Container(
@@ -636,16 +672,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         ListView(
                           padding: EdgeInsets.symmetric(horizontal: 7.0),
                           children: todolistToday.map((item) {
-                            return Row(
+                            return
+                            item.to == null || DateTime.now().compareTo(item.to) <= 0?
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Checkbox(
-                                  value: _checkbox,
+                                  value: item.check,
                                   onChanged: (value) {
-                                    setState(() {
-                                      print(_checkbox);
-                                      _checkbox = !_checkbox;
-                                    });
+                                    Provider.of<ApplicationState>(context, listen: false).updateCheck(item, value);
                                   },
                                 ),
                                 Expanded(child: Text(item.eventName)),
@@ -654,25 +689,25 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     iconSize: 13,
                                     color: Colors.blue,
                                     onPressed: () {
-                                      Provider.of<ApplicationState>(context, listen: false).updateTodaytoWhole(item);
+                                      Provider.of<ApplicationState>(context, listen: false).updateTodaytoWhole(item, DateTime.now());
                                     })
                               ],
-                            );
+                            ):SizedBox();
                           },).toList(),
                         ),
                         ListView(
                           padding: EdgeInsets.symmetric(horizontal: 7.0),
                           children: todolistWhole.map((item) {
-                            return Row(
+                            return
+                              item.to == null || DateTime.now().compareTo(item.to) <= 0?
+                              Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Checkbox(
-                                  value: _checkbox,
+                                  value: item.check,
                                   onChanged: (value) {
-                                    setState(() {
-                                      print(_checkbox);
-                                      _checkbox = !_checkbox;
-                                    });
+                                    Provider.of<ApplicationState>(context, listen: false).updateCheck(item, value);
+
                                   },
                                 ),
                                 Expanded(child: Text(item.eventName)),
@@ -681,10 +716,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     iconSize: 13,
                                     color: Colors.redAccent,
                                     onPressed: () {
-                                      Provider.of<ApplicationState>(context, listen: false).updateWholetoToday(item);
+                                      Provider.of<ApplicationState>(context, listen: false).updateWholetoToday(item, DateTime.now());
                                     })
                               ],
-                            );
+                            ):SizedBox();
                           },).toList(),
                         ),
                       ],

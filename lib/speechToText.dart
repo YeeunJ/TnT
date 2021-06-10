@@ -363,6 +363,7 @@ class _SpeechPageState extends State<SpeechPage> {
                 Provider.of<ApplicationState>(context, listen: false).addTodoList(Meeting(null, plan.eventName, null, DateTime.parse(plan.to.toString()), null,null, null, false));
                 //else로 일정 add 추가
                 Navigator.pop(context, "OK");
+                Navigator.pop(context);
               },
             ),
             FlatButton(

@@ -33,43 +33,20 @@ class ApplicationState extends ChangeNotifier {
             .collection(FirebaseAuth.instance.currentUser.uid+":schedule")
             .snapshots()
             .listen((snapshot) {
-          _timetables = [];
-          _todolists = [];
-          _todolistsWhole = [];
+          _meetings = [];
           snapshot.docs.forEach((document) {
-            if (document.data()['background'] != null) {
-              print(document.data()['eventName'] + " timetable");
-              _timetables.add(
-                  Meeting(document.data()['eventName'], document.data()['from'],
-                      document.data()['to'], document.data()['background'],
-                      document.data()['isAllDay'])
+            if(document.data()['background'] != null){
+              _meetings.add(
+                Meeting(document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.blueGrey, false, document.data()['recurrenceRule'])
               );
-            } else {
-              if (document.data()['from'] != null) {
-                print(document.data()['eventName'] + " todolist");
-                _todolists.add(
-                    Schedule(
-                        document.id,
-                        document.data()['eventName'],
-                        document.data()['from'].toDate(),
-                        document.data()['to'].toDate(),
-                        null,
-                        null,
-                        document.data()['check'])
-                );
-              } else {
-                print(document.data()['eventName'] + " todolistWhole");
-                _todolistsWhole.add(
-                    Schedule(
-                        document.id,
-                        document.data()['eventName'],
-                        document.data()['from'],
-                        document.data()['to'].toDate(),
-                        null,
-                        null,
-                        document.data()['check'])
-                );
-              }
+            } else if(document.data()['to'] != null){
+              _meetings.add(
+                  Meeting(document.data()['eventName'], document.data()['from'], document.data()['to'].toDate(), null, false, document.data()['recurrenceRule'])
+              );
+            }else{
+              _meetings.add(
+                  Meeting(document.data()['eventName'], document.data()['from'], null, null, false, document.data()['recurrenceRule'])
+              );
             }
           });
           notifyListeners();
@@ -86,8 +63,8 @@ class ApplicationState extends ChangeNotifier {
   List<Schedule> get todolist => _todolists;
   List<Schedule> _todolistsWhole = [];
   List<Schedule> get todolistWhole => _todolists;
-  List<Meeting> _timetables = [];
-  List<Meeting> get timetables => _timetables;
+  List<Meeting> _meetings = [];
+  List<Meeting> get meetings => _meetings;
   List<int> _data1 = [30,65,58,87,90];
   List<int> _data2 = [3,7,6,2,9];
   List<List<int>> _data3 = [[1,2,3,4], [0,3,2,4], [1,2,2,1], [1,0,0,4], [5,3,5,2]];
@@ -105,44 +82,37 @@ class ApplicationState extends ChangeNotifier {
     _loginState = ApplicationLoginState.loggedIn;
     return credit;
   }
-  List<Schedule> getTodolistsWhole(){
+  List<Meeting> getTodolistsWhole(){
     //addTodoList();
     readAllProducts();
     print(_todolistsWhole);
 
-    return _todolistsWhole;
+    return _meetings;
   }
 
-  void readAllProducts() {
+  List<Meeting> readAllProducts() {
     print(FirebaseAuth.instance.currentUser.uid);
     _meetingSubscription = FirebaseFirestore.instance
         .collection(FirebaseAuth.instance.currentUser.uid+":schedule")
         .snapshots()
         .listen((snapshot) {
-      _timetables = [];
-      _todolists = [];
-      _todolistsWhole = [];
+      _meetings = [];
       snapshot.docs.forEach((document) {
         if(document.data()['background'] != null){
-          print(document.data()['eventName']+" timetable//");
-          _timetables.add(
-              Meeting(document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), document.data()['background'], document.data()['isAllDay'])
+          Meeting(document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.blueGrey, false, document.data()['recurrenceRule']);
+        } else if(document.data()['to'] != null){
+          _meetings.add(
+              Meeting(document.data()['eventName'], document.data()['from'], document.data()['to'].toDate(), null, false, document.data()['recurrenceRule'])
           );
         }else{
-          if(document.data()['from'] != null){
-            print(document.data()['eventName']+" todolist//");
-            _todolists.add(
-                Schedule(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), null, null, document.data()['check'])
-            );
-          }else{
-            print(document.data()['eventName']+" todolistWhole//");
-            _todolistsWhole.add(
-                Schedule(document.id, document.data()['eventName'], document.data()['from'], document.data()['to'].toDate(), null, null, document.data()['check'])
-            );
-          }
+          _meetings.add(
+              Meeting(document.data()['eventName'], document.data()['from'], null, null, false, document.data()['recurrenceRule'])
+          );
         }
       });
     });
+
+    return _meetings;
   }
 
 
@@ -276,11 +246,12 @@ class Schedule {
 }
 
 class Meeting {
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
+  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay, this.recurrenceRule);
 
   String eventName;
   DateTime from;
   DateTime to;
   Color background;
   bool isAllDay;
+  String recurrenceRule;
 }

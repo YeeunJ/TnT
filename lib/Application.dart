@@ -163,10 +163,18 @@ class ApplicationState extends ChangeNotifier {
     if (_loginState != ApplicationLoginState.loggedIn) {
       throw Exception('Must be logged in');
     }
-    var repeats = "";
+    var repeats = null;
+    var i=0;
     t.repeats.forEach((item){
-      repeats+= item;
-      repeats+= "@";
+      if(i==0) repeats = "FREQ=WEEKLY;INTERVAL=7;BYDAY=";
+      else repeats += ",";
+      if(item=="월")repeats += "MO";
+      else if (item=="화")repeats += "TU";
+      else if (item=="수")repeats += "WE";
+      else if (item=="목")repeats += "TH";
+      else if (item=="금")repeats += "FR";
+      else if (item=="토")repeats += "SA";
+      else if (item=="일")repeats += "SU";
     });
     final data =
     {

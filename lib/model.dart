@@ -24,7 +24,7 @@ const List<String> allCalendars = <String>[
   '학교', '직장', '친목', '기타'
 ];
 const List<String> allCalendarsValues = <String>[
-  'S', 'C', 'F', 'E'
+  '1', '2', '3', '4'
 ];
 
 class TimeTableModel {
@@ -38,7 +38,7 @@ class TimeTableModel {
   ];
   String alarm = '5';
   String calendar = 'C';
-
+  int count = 0;
 
 
   String type = 'U';

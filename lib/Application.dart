@@ -36,9 +36,33 @@ class ApplicationState extends ChangeNotifier {
           _meetings = [];
           snapshot.docs.forEach((document) {
             if(document.data()['background'] != null){
-              _meetings.add(
-                  Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.blueGrey, false, document.data()['recurrenceRule'], document.data()['check'])
-              );            } else if(document.data()['from'] != null && document.data()['to'] != null){
+              if(document.data()['background'] == 1){
+                _meetings.add(
+                    Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Color(0xFF0F8644), false, document.data()['recurrenceRule'], document.data()['check'])
+                );
+                print("check1");
+              }
+              else if(document.data()['background'] == 2){
+                _meetings.add(
+                    Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.amberAccent, false, document.data()['recurrenceRule'], document.data()['check'])
+                );
+                print("check2");
+              }
+              else if(document.data()['background'] == 3){
+                _meetings.add(
+                    Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.pinkAccent, false, document.data()['recurrenceRule'], document.data()['check'])
+                );
+                print("check3");
+              }
+              else if(document.data()['background'] == 4){
+                _meetings.add(
+                    Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.blueGrey, false, document.data()['recurrenceRule'], document.data()['check'])
+                );
+                print("check4");
+              }
+            }
+
+            else if(document.data()['from'] != null && document.data()['to'] != null){
               _meetings.add(
                   Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), null, false, document.data()['recurrenceRule'], document.data()['check'])
               );
@@ -106,9 +130,30 @@ class ApplicationState extends ChangeNotifier {
       _meetings = [];
       snapshot.docs.forEach((document) {
         if(document.data()['background'] != null){
+          if(document.data()['background'] == 1){
           _meetings.add(
-          Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.blueGrey, false, document.data()['recurrenceRule'], document.data()['check'])
-          );
+          Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Color(0xFF0F8644), false, document.data()['recurrenceRule'], document.data()['check'])
+        );
+        print("check1");
+        }
+        else if(document.data()['background'] == 2){
+        _meetings.add(
+        Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.amberAccent, false, document.data()['recurrenceRule'], document.data()['check'])
+        );
+        print("check2");
+        }
+        else if(document.data()['background'] == 3){
+        _meetings.add(
+        Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.pinkAccent, false, document.data()['recurrenceRule'], document.data()['check'])
+        );
+        print("check3");
+        }
+        else if(document.data()['background'] == 4){
+        _meetings.add(
+        Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.blueGrey, false, document.data()['recurrenceRule'], document.data()['check'])
+        );
+        print("check4");
+        }
         } else if(document.data()['from'] != null && document.data()['to'] != null){
           _meetings.add(
               Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), null, false, document.data()['recurrenceRule'], document.data()['check'])
@@ -163,10 +208,10 @@ class ApplicationState extends ChangeNotifier {
     if (_loginState != ApplicationLoginState.loggedIn) {
       throw Exception('Must be logged in');
     }
-    var repeats = null;
+    var repeats = "";
     var i=0;
     t.repeats.forEach((item){
-      if(i==0) repeats = "FREQ=WEEKLY;INTERVAL=7;BYDAY=";
+      if(i==0) repeats = "FREQ=WEEKLY;INTERVAL=1;BYDAY=";
       else repeats += ",";
       if(item=="월")repeats += "MO";
       else if (item=="화")repeats += "TU";
@@ -176,9 +221,15 @@ class ApplicationState extends ChangeNotifier {
       else if (item=="토")repeats += "SA";
       else if (item=="일")repeats += "SU";
     });
+    if(repeats!="") {
+      if (t.count == null)
+        repeats += ";COUNT=1";
+      else
+        repeats += ";COUNT=" + t.count.toString();
+    }
     final data =
     {
-      "background": 1,
+      "background": int.parse(t.calendar),
       "eventName": t.name,
       "isAllDay": t.isAllday,
       "from": t.start,

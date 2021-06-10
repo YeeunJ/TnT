@@ -21,6 +21,7 @@ final GlobalKey<FormState> _allDayKey = GlobalKey<FormState>();
 final GlobalKey<FormState> _startKey = GlobalKey<FormState>();
 final GlobalKey<FormState> _endKey = GlobalKey<FormState>();
 final GlobalKey<FormState> _repeatKey = GlobalKey<FormState>();
+final GlobalKey<FormState> _countKey =  GlobalKey<FormState>();
 final GlobalKey<FormState> _alarmKey = GlobalKey<FormState>();
 final GlobalKey<FormState> _calendarKey = GlobalKey<FormState>();
 
@@ -186,6 +187,7 @@ class ExampleFormState extends State<ExampleForm> {
             _buildCardSettingsDateTimePicker_Start(),
             _buildCardSettingsDateTimePicker_End(),
             _buildCardSettingsCheckboxPicker_Repeat(),
+            _buildCardSettingsNumberPicker_Count(),
             _buildCardSettingsListPicker_Alarm(),
             _buildCardSettingsListPicker_Calendar(),
           ],
@@ -219,6 +221,7 @@ class ExampleFormState extends State<ExampleForm> {
             _buildCardSettingsDateTimePicker_Start(),
             _buildCardSettingsDateTimePicker_End(),
             _buildCardSettingsCheckboxPicker_Repeat(),
+            _buildCardSettingsNumberPicker_Count(),
             _buildCardSettingsListPicker_Alarm(),
             _buildCardSettingsListPicker_Calendar(),
           ],
@@ -337,6 +340,31 @@ class ExampleFormState extends State<ExampleForm> {
       },
     );
   }
+
+  //todo
+  CardSettingsNumberPicker _buildCardSettingsNumberPicker_Count(
+      {TextAlign labelAlign}) {
+    return CardSettingsNumberPicker(
+      key: _countKey,
+      label: '반복횟수',
+      labelAlign: labelAlign,
+      initialValue: _timeTableModel.count,
+      min: 1,
+      max: 10,
+      stepInterval: 1,
+      validator: (value) {
+        //if (value == null) return 'Age is required.';
+        return null;
+      },
+      onSaved: (value) => _timeTableModel.count = value,
+      onChanged: (value) {
+        setState(() {
+          _timeTableModel.count = value;
+        });
+      },
+    );
+  }
+
   CardSettingsListPicker _buildCardSettingsListPicker_Alarm() {
     return CardSettingsListPicker(
       key: _alarmKey,
@@ -361,7 +389,7 @@ class ExampleFormState extends State<ExampleForm> {
     return CardSettingsListPicker(
       key: _calendarKey,
       label: '캘린더',
-      initialValue: 'E',
+      initialValue: '4',
       autovalidateMode: _autoValidateMode,
       options: allCalendars,
       values: allCalendarsValues,

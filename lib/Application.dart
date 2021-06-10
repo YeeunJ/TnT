@@ -245,6 +245,7 @@ class Schedule {
   bool check;
 }
 
+
 class Meeting {
   Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay, this.recurrenceRule);
 

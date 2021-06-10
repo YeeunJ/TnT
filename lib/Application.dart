@@ -163,24 +163,34 @@ class ApplicationState extends ChangeNotifier {
     if (_loginState != ApplicationLoginState.loggedIn) {
       throw Exception('Must be logged in');
     }
-    var repeats = "";
+    var repeats = null;
+    var i=0;
     t.repeats.forEach((item){
-      repeats+= item;
-      repeats+= "@";
+      if(i==0) repeats = "FREQ=WEEKLY;INTERVAL=7;BYDAY=";
+      else repeats += ",";
+      if(item=="월")repeats += "MO";
+      else if (item=="화")repeats += "TU";
+      else if (item=="수")repeats += "WE";
+      else if (item=="목")repeats += "TH";
+      else if (item=="금")repeats += "FR";
+      else if (item=="토")repeats += "SA";
+      else if (item=="일")repeats += "SU";
     });
     final data =
     {
-      "name": t.name,
-      "isAllday": t.isAllday,
-      "start": t.start,
-      "end": t.end,
-      "repeats": repeats,
+      "background": 1,
+      "eventName": t.name,
+      "isAllDay": t.isAllday,
+      "from": t.start,
+      "to": t.end,
+      "recurrenceRule": repeats,
       "alarm": t.alarm,
       "calendar": t.calendar,
-      "regDate" : DateTime.now().millisecondsSinceEpoch,
-      "editDate": DateTime.now().millisecondsSinceEpoch,
+      "timestamp" : FieldValue.serverTimestamp(),
+      "editDate": FieldValue.serverTimestamp(),
+      "check": false,
     };
-    FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid).add(
+    FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid+':schedule').add(
         data
     );
   }

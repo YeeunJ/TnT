@@ -195,7 +195,7 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-  void deleteTodoList(String id) {
+  void deleteSchedule(String id) {
 //    if (_loginState != ApplicationLoginState.loggedIn) {
 //      throw Exception('Must be logged in');
 //    }

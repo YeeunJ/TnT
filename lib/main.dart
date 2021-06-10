@@ -693,7 +693,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   value: item.check,
                                   onChanged: (value) {
                                     Provider.of<ApplicationState>(context, listen: false).updateCheck(item, value);
-
                                   },
                                 ),
                                 Expanded(child: Text(item.eventName)),

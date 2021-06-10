@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tnt/speech_api.dart';
 import 'package:provider/provider.dart';
 import './Application.dart';
+import './model.dart';
 
 class SpeechPage extends StatefulWidget {
   @override
@@ -51,7 +52,7 @@ class _SpeechPageState extends State<SpeechPage> {
               children: [
                 SizedBox(width: 30,),
                 Text(
-                    '할일',
+                    '일정',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.blue),
                 ),
                 Switch(
@@ -65,7 +66,7 @@ class _SpeechPageState extends State<SpeechPage> {
                   // activeColor: Colors.green,
                 ),
                 Text(
-                  '일정',
+                  '할일',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.blue),
                 ),
                 SizedBox(width: 30,),
@@ -360,7 +361,16 @@ class _SpeechPageState extends State<SpeechPage> {
               child: Text('추가'),
               onPressed: () {
                 print(_isPlan);
-                Provider.of<ApplicationState>(context, listen: false).addTodoList(Meeting(null, plan.eventName, null, DateTime.parse(plan.to.toString()), null,null, null, false));
+                if(_isPlan)
+                  Provider.of<ApplicationState>(context, listen: false).addTodoList(Meeting(null, plan.eventName, null, DateTime.parse(plan.to.toString()), null,null, null, false));
+                else{
+                  TimeTableModel _timetableModel = TimeTableModel();
+                  _timetableModel.name = plan.eventName;
+                  _timetableModel.start=plan.from;
+                  _timetableModel.end=plan.to;
+                  _timetableModel.calendar = '4';
+                  Provider.of<ApplicationState>(context, listen: false).addTimeTable(_timetableModel);
+                }
                 //else로 일정 add 추가
                 Navigator.pop(context, "OK");
                 Navigator.pop(context);

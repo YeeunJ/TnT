@@ -1,6 +1,7 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:tnt/speech_api.dart';
+import 'package:provider/provider.dart';
 import './Application.dart';
 
 class SpeechPage extends StatefulWidget {
@@ -184,12 +185,12 @@ class _SpeechPageState extends State<SpeechPage> {
       DateTime to = DateTime.parse(real);
       print(to); // 2020-01-02 03:04:05.000
 
-      plan = Meeting(eventName, null, to, null, null);
+      plan = Meeting(null, eventName, null, to, null,null, null, false);
 
     } else {
       print(text);
       String eventName = text;
-      plan = Meeting(eventName, null, null, null, null);
+      plan = Meeting(null, eventName, null, null, null,null, null, false);
     }
   }
 
@@ -274,7 +275,7 @@ class _SpeechPageState extends State<SpeechPage> {
 
       DateTime to = DateTime.parse(real);
 
-      plan = Meeting(eventName, from, to, null, null);
+      plan = Meeting(null, eventName, from, to, null,null, null, false);
       print(plan.to);
       print(plan.from);
       print(plan.eventName);
@@ -358,6 +359,9 @@ class _SpeechPageState extends State<SpeechPage> {
             FlatButton(
               child: Text('추가'),
               onPressed: () {
+                print(_isPlan);
+                Provider.of<ApplicationState>(context, listen: false).addTodoList(Meeting(null, plan.eventName, null, DateTime.parse(plan.to.toString()), null,null, null, false));
+                //else로 일정 add 추가
                 Navigator.pop(context, "OK");
               },
             ),
@@ -372,15 +376,4 @@ class _SpeechPageState extends State<SpeechPage> {
       },
     );
   }
-}
-
-
-class Meeting {
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
-
-  String eventName;
-  DateTime from;
-  DateTime to;
-  Color background;
-  bool isAllDay;
 }

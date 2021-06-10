@@ -80,7 +80,9 @@ class _myCalendarState extends State<myCalendar> with TickerProviderStateMixin {
           _meetings = Provider.of<ApplicationState>(context, listen: false).getTodolistsWhole();
         });
         print(_meetings);
-
+        _schedule = [];
+        _todolistToday = [];
+        _todolistWhole = [];
         for(var meeting in _meetings){
           if(meeting.recurrenceRule != null){
             _schedule.add(meeting);
@@ -287,13 +289,16 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
   List<Meeting> schedule = [];
   List<Meeting> todolistToday = [];
   List<Meeting> todolistWhole = [];
+  bool itemsListening = false;
 
   _WeeklyCalendarState({@required this.meetingList});
 
   @override
   Widget build(BuildContext context) {
     print(meetingList);
-
+    schedule = [];
+    todolistToday = [];
+    todolistWhole = [];
     for(var meeting in meetingList){
       if(meeting.recurrenceRule != null){
         schedule.add(meeting);
@@ -302,6 +307,29 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
       }else{
         todolistWhole.add(meeting);
       }
+    }
+    if (!itemsListening) {
+      print("test2");
+      Provider.of<ApplicationState>(context, listen: false).addListener(() {
+        setState(() {
+          meetingList = Provider.of<ApplicationState>(context, listen: false).getTodolistsWhole();
+        });
+        print(meetingList);
+        schedule = [];
+        todolistToday = [];
+        todolistWhole = [];
+        for(var meeting in meetingList){
+          if(meeting.recurrenceRule != null){
+            schedule.add(meeting);
+          }
+          else if(meeting.from != null){
+            todolistToday.add(meeting);
+          }else{
+            todolistWhole.add(meeting);
+          }
+        }
+      });
+      itemsListening = true;
     }
     return Scaffold(
         appBar: AppBar(
@@ -362,6 +390,7 @@ class _DailyCalendarState extends State<DailyCalendar> {
   List<Meeting> schedule = [];
   List<Meeting> todolistToday = [];
   List<Meeting> todolistWhole = [];
+  bool itemsListening = false;
 
   _DailyCalendarState({@required this.meetingList});
 
@@ -370,7 +399,9 @@ class _DailyCalendarState extends State<DailyCalendar> {
   @override
   Widget build(BuildContext context) {
     print(meetingList);
-
+    schedule = [];
+    todolistToday = [];
+    todolistWhole = [];
     for(var meeting in meetingList){
       if(meeting.recurrenceRule != null){
        schedule.add(meeting);
@@ -379,6 +410,29 @@ class _DailyCalendarState extends State<DailyCalendar> {
       }else{
         todolistWhole.add(meeting);
       }
+    }
+    if (!itemsListening) {
+      print("test1");
+      Provider.of<ApplicationState>(context, listen: false).addListener(() {
+        setState(() {
+          meetingList = Provider.of<ApplicationState>(context, listen: false).getTodolistsWhole();
+        });
+        print(meetingList);
+        schedule = [];
+        todolistToday = [];
+        todolistWhole = [];
+        for(var meeting in meetingList){
+          if(meeting.recurrenceRule != null){
+            schedule.add(meeting);
+          }
+          else if(meeting.from != null){
+            todolistToday.add(meeting);
+          }else{
+            todolistWhole.add(meeting);
+          }
+        }
+      });
+      itemsListening = true;
     }
 
     return Scaffold(
@@ -441,6 +495,7 @@ class _DailyCalendarState extends State<DailyCalendar> {
                                   Checkbox(
                                     value: _ischecked,
                                     onChanged: (bool value) {
+                                      Provider.of<ApplicationState>(context, listen: false).updateCheck(item, value);
                                       setState(() {
                                         _ischecked = value;
                                       });
@@ -452,8 +507,14 @@ class _DailyCalendarState extends State<DailyCalendar> {
                                       style: TextStyle(fontSize: 13),
                                     ),
                                   ),
+                                  IconButton(
+                                      icon: Icon(Icons.minimize),
+                                      iconSize: 13,
+                                      color: Colors.blue,
+                                      onPressed: () {
+                                        Provider.of<ApplicationState>(context, listen: false).updateTodaytoWhole(item);
+                                      })
                                 ],
-
                               );
                             },).toList(),
                           ),
@@ -476,6 +537,7 @@ class _DailyCalendarState extends State<DailyCalendar> {
                                   Checkbox(
                                     value: _ischecked,
                                     onChanged: (value) {
+                                      Provider.of<ApplicationState>(context, listen: false).updateCheck(item, value);
                                       setState(() {
                                         _ischecked = !_ischecked;
                                       });
@@ -483,10 +545,12 @@ class _DailyCalendarState extends State<DailyCalendar> {
                                   ),
                                   Expanded(child: Text(item.eventName)),
                                   IconButton(
-                                      icon: Icon(Icons.minimize),
+                                      icon: Icon(Icons.add),
                                       iconSize: 13,
-                                      color: Colors.blue,
-                                      onPressed: () {})
+                                      color: Colors.redAccent,
+                                      onPressed: () {
+                                        Provider.of<ApplicationState>(context, listen: false).updateWholetoToday(item);
+                                      })
                                 ],
                               );
                             }).toList(),
@@ -571,6 +635,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   },
                                 ),
                                 Expanded(child: Text(item.eventName)),
+                                IconButton(
+                                    icon: Icon(Icons.minimize),
+                                    iconSize: 13,
+                                    color: Colors.blue,
+                                    onPressed: () {
+                                      Provider.of<ApplicationState>(context, listen: false).updateTodaytoWhole(item);
+                                    })
                               ],
                             );
                           },).toList(),
@@ -595,7 +666,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     icon: Icon(Icons.add),
                                     iconSize: 13,
                                     color: Colors.redAccent,
-                                    onPressed: () {})
+                                    onPressed: () {
+                                      Provider.of<ApplicationState>(context, listen: false).updateWholetoToday(item);
+                                    })
                               ],
                             );
                           },).toList(),
@@ -616,7 +689,7 @@ class AddTodoScreen extends StatefulWidget {
 
 class _AddTodoScreenState extends State<AddTodoScreen> {
   TextEditingController textController = TextEditingController();
-  String _selectedDate = "";
+  String _selectedDate = null;
   bool _isDue = false;
 
   @override
@@ -644,7 +717,14 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                   margin: const EdgeInsets.symmetric(horizontal: 2.0),
                   child: IconButton(
                       icon: Icon(Icons.send),
-                      onPressed: () => {}
+                      onPressed: () {
+                        if(_selectedDate == null){
+                          Provider.of<ApplicationState>(context, listen: false).addTodoList(Meeting(null, textController.text, null, null, null,null, null, false));
+                        }else{
+                          Provider.of<ApplicationState>(context, listen: false).addTodoList(Meeting(null, textController.text, null, DateTime.parse(_selectedDate), null,null, null, false));
+                        }
+                        Navigator.pop(context);
+                      }
                   ),
                 ),
               ],
@@ -676,7 +756,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                     });
                   },
                 ),
-                _selectedDate == "" ? Text('마감일 선택') : Text(_selectedDate),
+                _selectedDate == null ? Text('마감일 선택') : Text(_selectedDate),
                 SizedBox(
                   width: 20,
                 ),

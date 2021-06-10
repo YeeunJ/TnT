@@ -37,15 +37,22 @@ class ApplicationState extends ChangeNotifier {
           snapshot.docs.forEach((document) {
             if(document.data()['background'] != null){
               _meetings.add(
-                Meeting(document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.blueGrey, false, document.data()['recurrenceRule'])
-              );
-            } else if(document.data()['to'] != null){
+                  Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.blueGrey, false, document.data()['recurrenceRule'], document.data()['check'])
+              );            } else if(document.data()['from'] != null && document.data()['to'] != null){
               _meetings.add(
-                  Meeting(document.data()['eventName'], document.data()['from'], document.data()['to'].toDate(), null, false, document.data()['recurrenceRule'])
+                  Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), null, false, document.data()['recurrenceRule'], document.data()['check'])
+              );
+            }else if(document.data()['from'] != null){
+              _meetings.add(
+                  Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'], null, false, document.data()['recurrenceRule'], document.data()['check'])
+              );
+            }else if(document.data()['to'] != null){
+              _meetings.add(
+                  Meeting(document.id, document.data()['eventName'], document.data()['from'], document.data()['to'].toDate(), null, false, document.data()['recurrenceRule'], document.data()['check'])
               );
             }else{
               _meetings.add(
-                  Meeting(document.data()['eventName'], document.data()['from'], null, null, false, document.data()['recurrenceRule'])
+                  Meeting(document.id, document.data()['eventName'], document.data()['from'], null, null, false, document.data()['recurrenceRule'], document.data()['check'])
               );
             }
           });
@@ -99,14 +106,24 @@ class ApplicationState extends ChangeNotifier {
       _meetings = [];
       snapshot.docs.forEach((document) {
         if(document.data()['background'] != null){
-          Meeting(document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.blueGrey, false, document.data()['recurrenceRule']);
-        } else if(document.data()['to'] != null){
           _meetings.add(
-              Meeting(document.data()['eventName'], document.data()['from'], document.data()['to'].toDate(), null, false, document.data()['recurrenceRule'])
+          Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.blueGrey, false, document.data()['recurrenceRule'], document.data()['check'])
+          );
+        } else if(document.data()['from'] != null && document.data()['to'] != null){
+          _meetings.add(
+              Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), null, false, document.data()['recurrenceRule'], document.data()['check'])
+          );
+        }else if(document.data()['from'] != null){
+          _meetings.add(
+              Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'], null, false, document.data()['recurrenceRule'], document.data()['check'])
+          );
+        }else if(document.data()['to'] != null){
+          _meetings.add(
+              Meeting(document.id, document.data()['eventName'], document.data()['from'], document.data()['to'].toDate(), null, false, document.data()['recurrenceRule'], document.data()['check'])
           );
         }else{
           _meetings.add(
-              Meeting(document.data()['eventName'], document.data()['from'], null, null, false, document.data()['recurrenceRule'])
+              Meeting(document.id, document.data()['eventName'], document.data()['from'], null, null, false, document.data()['recurrenceRule'], document.data()['check'])
           );
         }
       });
@@ -133,16 +150,12 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-  void deleteTodoList(String id, String uid) {
-    if (_loginState != ApplicationLoginState.loggedIn) {
-      throw Exception('Must be logged in');
-    }
+  void deleteTodoList(String id) {
+//    if (_loginState != ApplicationLoginState.loggedIn) {
+//      throw Exception('Must be logged in');
+//    }
 
-    if(uid != FirebaseAuth.instance.currentUser.uid){
-      throw Exception('You can only erase what you write.');
-    }
-
-    FirebaseFirestore.instance.collection(uid).doc(id).delete();
+    FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid+":schedule").doc(id).delete();
   }
 
   //todo
@@ -172,63 +185,67 @@ class ApplicationState extends ChangeNotifier {
     );
   }
 
-  Future<DocumentReference> addTodoList(Schedule item) async {
+  Future<DocumentReference> addTodoList(Meeting item) async {
     if (_loginState != ApplicationLoginState.loggedIn) {
       throw Exception('Must be logged in');
     }
 
-    return FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid).add({
+    return FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid+':schedule').add({
       'eventName': item.eventName,
       'from': null,
       'to': item.to,
       'background': null,
       'isAllDay': null,
+      'recurrenceRule': null,
       'check': false,
       'timestamp': FieldValue.serverTimestamp(),
     });
   }
 
-  Future<void> updateWholetoToday(Schedule item) async {
+  Future<void> updateWholetoToday(Meeting item) async {
     if (_loginState != ApplicationLoginState.loggedIn) {
       throw Exception('Must be logged in');
     }
-    await FirebaseFirestore.instance.collection('product').doc(item.id).update({
+    await FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid+':schedule').doc(item.id).update({
       'eventName': item.eventName,
       'from': FieldValue.serverTimestamp(),
       'to': item.to,
-      'background': null,
-      'isAllDay': null,
-      'check': false,
+      'background': item.background,
+      'isAllDay': item.isAllDay,
+      'recurrenceRule':item.recurrenceRule,
+      'check': item.check,
       'timestamp': FieldValue.serverTimestamp(),
     });
   }
 
-  Future<void> updateTodaytoWhole(Schedule item) async {
+  Future<void> updateTodaytoWhole(Meeting item) async {
     if (_loginState != ApplicationLoginState.loggedIn) {
       throw Exception('Must be logged in');
     }
-    await FirebaseFirestore.instance.collection('product').doc(item.id).update({
+    await FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid+':schedule').doc(item.id).update({
       'eventName': item.eventName,
       'from': null,
       'to': item.to,
-      'background': null,
-      'isAllDay': null,
-      'check': false,
+      'background': item.background,
+      'isAllDay': item.isAllDay,
+      'recurrenceRule':item.recurrenceRule,
+      'check': item.check,
       'timestamp': FieldValue.serverTimestamp(),
     });
   }
 
-  Future<void> updateCheck(Schedule item) async {
+  Future<void> updateCheck(Meeting item, bool value) async {
     if (_loginState != ApplicationLoginState.loggedIn) {
       throw Exception('Must be logged in');
     }
-    await FirebaseFirestore.instance.collection('product').doc(item.id).update({
+    await FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid+':schedule').doc(item.id).update({
       'eventName': item.eventName,
       'from': item.from,
       'to': item.to,
-      'background': null,
-      'isAllDay': null,
-      'check': true,
+      'background': item.background,
+      'isAllDay': item.isAllDay,
+      'recurrenceRule':item.recurrenceRule,
+      'check': value,
       'timestamp': FieldValue.serverTimestamp(),
     });
   }
@@ -247,12 +264,13 @@ class Schedule {
 
 
 class Meeting {
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay, this.recurrenceRule);
-
+  Meeting(this.id, this.eventName, this.from, this.to, this.background, this.isAllDay, this.recurrenceRule, this.check);
+  String id;
   String eventName;
   DateTime from;
   DateTime to;
   Color background;
   bool isAllDay;
   String recurrenceRule;
+  bool check;
 }

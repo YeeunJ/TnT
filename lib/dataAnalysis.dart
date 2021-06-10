@@ -86,9 +86,12 @@ class _dataAnalysisPageState extends State<dataAnalysisPage> {
       List<int> w = [0,0,0,0,0];
       List<List<int>> t = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
       for(var meeting in _meetings){
-        var from = meeting.from.toString().split(" ")[0];
-        var time = meeting.from.toString().split(" ")[1].split(":")[0];
-        if(from != null){
+
+
+        if(meeting.from != null){
+          var from = meeting.from.toString().split(" ")[0];
+          var time = meeting.from.toString().split(" ")[1].split(":")[0];
+          
           if(from == date.subtract(Duration(days: 4)).toString().split(" ")[0]){
             w[0]++;
             if(meeting.check) d[0]++;

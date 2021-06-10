@@ -56,7 +56,7 @@ class ApplicationState extends ChangeNotifier {
               }
               else if(document.data()['background'] == 4){
                 _meetings.add(
-                    Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.blueGrey, false, document.data()['recurrenceRule'], document.data()['check'])
+                    Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.yellow, false, document.data()['recurrenceRule'], document.data()['check'])
                 );
                 print("check4");
               }
@@ -150,7 +150,7 @@ class ApplicationState extends ChangeNotifier {
         }
         else if(document.data()['background'] == 4){
         _meetings.add(
-        Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.blueGrey, false, document.data()['recurrenceRule'], document.data()['check'])
+        Meeting(document.id, document.data()['eventName'], document.data()['from'].toDate(), document.data()['to'].toDate(), Colors.yellow, false, document.data()['recurrenceRule'], document.data()['check'])
         );
         print("check4");
         }

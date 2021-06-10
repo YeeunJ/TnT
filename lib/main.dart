@@ -269,8 +269,56 @@ class _MonthlyCalendarState extends State<MonthlyCalendar> {
             showAgenda: true,
             // appointmentDisplayMode: MonthAppointmentDisplayMode.appointment
           ),
+          onLongPress: (CalendarLongPressDetails details) {
+            DateTime date = details.date;
+            dynamic appointments = details.appointments;
+            CalendarElement view = details.targetElement;
+            print(details.appointments.first.id);
+            print(details.resource);
+            print(details.targetElement);
+            showAlertDialog(context, details.appointments.first);
+          },
         ),
       ),
+    );
+  }
+
+  void showAlertDialog(BuildContext context, Meeting plan) async {
+    String result = await showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+              '일정을 삭제하시겠습니까?'
+          ),
+          content:
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('일정 이름: '+plan.eventName),
+              SizedBox(height: 7,)
+            ],
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('식제'),
+              onPressed: () {
+                Provider.of<ApplicationState>(context, listen: false).deleteSchedule(plan.id);
+                //else로 일정 add 추가
+                Navigator.pop(context, "OK");
+              },
+            ),
+            FlatButton(
+              child: Text('취소'),
+              onPressed: () {
+                Navigator.pop(context, "Cancel");
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

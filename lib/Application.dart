@@ -220,12 +220,13 @@ class ApplicationState extends ChangeNotifier {
       else if (item=="금")repeats += "FR";
       else if (item=="토")repeats += "SA";
       else if (item=="일")repeats += "SU";
+      i++;
     });
     if(repeats!="") {
       if (t.count == null)
         repeats += ";COUNT=1";
       else
-        repeats += ";COUNT=" + t.count.toString();
+        repeats += ";COUNT=" + (t.count*i).toString();
     }
     final data =
     {

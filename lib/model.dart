@@ -33,8 +33,8 @@ class TimeTableModel {
   DateTime start = DateTime(2021, 03, 24, 10, 10);
   DateTime end = DateTime(2021, 03, 24, 22, 10);
   List<String> repeats = <String>[
-    '월',
-    '화',
+    //'월',
+    //'화',
   ];
   String alarm = '5';
   String calendar = 'C';

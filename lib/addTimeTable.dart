@@ -5,8 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 import 'model.dart';
 import './Application.dart';
@@ -73,22 +71,10 @@ class _addTimeTableState extends State<addTimeTable> {
           onPressed: () async {
             setState(() => loaded = false);
             _timeTableModel = TimeTableModel();
-            await _timeTableModel.loadMedia();
             await setState(() => loaded = true);
             //_formKey.currentState.reset();
           },
         ),
-        actions: <Widget>[
-          /*IconButton(
-            icon: Icon(
-              Icons.check,
-            ),
-            color: Colors.black54,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),*/
-        ],
       ),
       body: ExampleForm(orientation, _showMaterialonIOS, _scaffoldKey, appState,
           key: _formWidgetKey, onValueChanged: showSnackBar),
@@ -128,8 +114,6 @@ class ExampleFormState extends State<ExampleForm> {
 
   void initModel() async {
     _timeTableModel = TimeTableModel();
-
-    await _timeTableModel.loadMedia();
 
     setState(() => loaded = true);
   }

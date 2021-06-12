@@ -47,30 +47,9 @@ class dataAnalysisPage extends StatefulWidget {
 
 class _dataAnalysisPageState extends State<dataAnalysisPage> {
 
-
-  List<Data1> chartData1 = [
-    Data1(date.subtract(Duration(days: 4)), 35),
-    Data1(date.subtract(Duration(days: 3)), 65),
-    Data1(date.subtract(Duration(days: 2)), 58),
-    Data1(date.subtract(Duration(days: 1)), 87),
-    Data1(date, 90),
-  ];
-
-  List<Data2> chartData2 = [
-    Data2(date.subtract(Duration(days: 4)), 3),
-    Data2(date.subtract(Duration(days: 3)), 7),
-    Data2(date.subtract(Duration(days: 2)), 6),
-    Data2(date.subtract(Duration(days: 1)), 2),
-    Data2(date, 9),
-  ];
-
-  List<Data3> chartData3 = [
-    Data3(date.subtract(Duration(days: 4)), 0,0,0,0),
-    Data3(date.subtract(Duration(days: 3)), 0,3,2,4),
-    Data3(date.subtract(Duration(days: 2)), 1,2,2,1),
-    Data3(date.subtract(Duration(days: 1)), 0,0,0,2),
-    Data3(date, 5,3,5,2),
-  ];
+  List<Data1> chartData1 = [];
+  List<Data2> chartData2 = [];
+  List<Data3> chartData3 = [];
 
   @override
   Widget build(BuildContext context) {
@@ -156,22 +135,6 @@ class _dataAnalysisPageState extends State<dataAnalysisPage> {
       Scaffold(
       appBar: AppBar(
         title: Text('활동 분석'),
-        actions: [
-          /*
-          IconButton(
-              icon: Icon(Icons.list),
-              color: Color(0xff636363),
-              iconSize: 28,
-              onPressed: () {
-              }),
-          IconButton(
-              icon: Icon(Icons.settings),
-              color: Color(0xff636363),
-              iconSize: 28,
-              onPressed: () {
-                Navigator.pushNamed(context, '/setting');
-              })*/
-        ],
       ),
       body: Container(
           child: Column(

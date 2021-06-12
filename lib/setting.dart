@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:card_settings/card_settings.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:card_settings/card_settings.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
-import 'package:file_picker/file_picker.dart';
 import 'model.dart';
 import 'global.dart' as global;
 
@@ -55,19 +51,6 @@ class _settingPageState extends State<settingPage> {
             color: Colors.black54,
           ),
         ),
-        /*leading:
-        IconButton(
-          icon: Icon(
-            Icons.autorenew,
-          ),
-          color: Colors.black54,
-          onPressed: () async {
-            setState(() => loaded = false);
-            _settingModel = SettingModel();
-            await setState(() => loaded = true);
-            //_formKey.currentState.reset();
-          },
-        ),*/
         actions: <Widget>[
           IconButton(
             icon: Icon(

@@ -68,7 +68,6 @@ class _editTimeTableState extends State<editTimeTable> {
           onPressed: () async {
             setState(() => loaded = false);
             _timeTableModel = TimeTableModel();
-            await _timeTableModel.loadMedia();
             await setState(() => loaded = true);
             //_formKey.currentState.reset();
           },
@@ -121,8 +120,6 @@ class ExampleFormState extends State<ExampleForm> {
 
   void initModel() async {
     _timeTableModel = TimeTableModel();
-
-    await _timeTableModel.loadMedia();
 
     setState(() => loaded = true);
   }
